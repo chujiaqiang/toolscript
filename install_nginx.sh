@@ -11,6 +11,7 @@ export PATH
 PRG_NAME=$(basename $0)
 FULLPATH=$(cd "$(dirname "$0")"; pwd)
 
+#Set the defualt work folder
 WORK_PATH='/fmt'
 
 #Get Parameter
