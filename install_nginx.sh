@@ -8,7 +8,19 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
+PRG_NAME=$(basename $0)
+FULLPATH=$(cd "$(dirname "$0")"; pwd)
+
 WORK_PATH='/fmt'
+
+#Get Parameter
+while getopts h:u:p:s:d:l: opt
+     do
+          case $opt in
+          d)     WORK_PATH=$OPTARG;;
+          esac
+done
+
 
 # Check if user is root
 if [ $(id -u) != "0" ]; then
@@ -101,7 +113,12 @@ mkdir -p /var/cache/nginx/uwsgi_temp
 mkdir -p /var/cache/nginx/scgi_temp
 
 cd ${WORK_PATH}/server/nginx/sbin/
-./nginx -c ${WORK_PATH}/server/nginx/nginx.conf
+
+if [ -f ${WORK_PATH}/server/nginx/run/nginx.pid ]; then
+	./nginx -c ${WORK_PATH}/server/nginx/nginx.conf
+else
+    ./nginx -s reload
+fi
 
 
 #http://nginx.org/en/linux_packages.html?_ga=1.138264499.2092786214.1447975135
