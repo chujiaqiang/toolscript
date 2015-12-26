@@ -29,8 +29,9 @@ if [ $(id -u) != "0" ]; then
     exit 1
 fi
 
-groupadd www
-useradd -s /sbin/nologin -g www www
+#create system usergroup and username.
+groupadd -r nginx
+useradd -r -s /sbin/nologin -g nginx -M nginx 
 
 rm -Rf ${WORK_PATH}
 mkdir -p ${WORK_PATH}
@@ -80,13 +81,13 @@ tar zxvf nginx-1.8.0.tar.gz
 cd nginx-1.8.0
 
 ./configure \
-        --user=www \
-        --group=www \
+        --user=nginx \
+        --group=nginx \
         --prefix=${WORK_PATH}/server/nginx \
+        --sbin-path=${WORK_PATH}/server/nginx/sbin/nginx \
         --conf-path=${WORK_PATH}/server/nginx/nginx.conf \
         --pid-path=${WORK_PATH}/server/nginx/run/nginx.pid \
         --lock-path=${WORK_PATH}/server/nginx/run/nginx.lock \
-        --sbin-path=${WORK_PATH}/server/nginx/sbin/nginx \
         --error-log-path=${WORK_PATH}/log/nginx/error.log \
         --http-log-path=${WORK_PATH}/log/nginx/access.log \
         --with-http_gzip_static_module \
