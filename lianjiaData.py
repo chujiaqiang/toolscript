@@ -62,13 +62,19 @@ def getHouseInfoForOneURL(quyuInfo):
     if total_house == 0:
         print 'no hourse fouund'
         return house_list
-
+        
+    if total_house > 3000:
+        print '3000+ hourse fouund, need split it into small pages'
+        return house_list
+        
     total_page = math.ceil(total_house / 30.0)
     for page_index in range(1, int(total_page)+1):
         page_url= '%s%d' % ('http://bj.lianjia.com/ershoufang/changying/p',page_index)
-    #     print page_url
+        page_html_doc= urllib.urlopen(page_url).read()
+        page_soup = BeautifulSoup(page_html_doc, 'html.parser')
+        #print page_url
         house_info=dict()
-        for house_info in  xiaoqu_soup.find('ul',class_='listContent').find_all('div', class_="info"):
+        for house_info in  page_soup.find('ul',class_='listContent').find_all('div', class_="info"):
             house_info['href']= house_info.find('a').get('href')
             house_info['title']= house_info.find('a').string
             house_info['address_xiaoqu']=house_info.find('div',class_="houseInfo").a.string
